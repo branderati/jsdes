@@ -29,8 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-ascii64 =
-	"./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
 
 /* Emil's adaptation of crypt() from FreeSec: libcrypt
  * Taken from $OpenBSD: crypt.c,v 1.18 2003/08/12 01:22:17 deraadt Exp $
@@ -67,7 +66,8 @@ ascii64 =
 
 
 jsdes = function() {
-
+	this.ascii64 =
+	"./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 	this.des_IP = [
 		58, 50, 42, 34, 26, 18, 10, 2, 60, 52, 44, 36, 28, 20, 12, 4,
 		62, 54, 46, 38, 30, 22, 14, 6, 64, 56, 48, 40, 32, 24, 16, 8,
@@ -179,28 +179,28 @@ jsdes = function() {
 
 	this.des_bits8 = [0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01];
 
-	var this.u_sbox = new Array(8),
-		this.m_sbox = new Array(4),
-		this.init_perm = new Array(64),
-		this.final_perm = new Array(64),
-		this.inv_key_perm = new Array(64),
-		this.u_key_perm = new Array(56),
-		this.inv_comp_perm = new Array(56),
-		this.ip_maskl = new Array(8),
-		this.ip_maskr = new Array(8),
-		this.fp_maskl = new Array(8),
-		this.fp_maskr = new Array(8),
-		this.un_pbox = new Array(32),
-		this.psbox = new Array(4),
-		this.key_perm_maskl = new Array(8),
-		this.key_perm_maskr = new Array(8),
-		this.comp_maskl = new Array(8),
-		this.comp_maskr = new Array(8),
-		this.en_keysl = new Array(16),
-		this.en_keysr = new Array(16),
-		this.saltbits,
-		this.des_r0,
-		this.des_r1;
+    this.u_sbox = new Array(8);
+		this.m_sbox = new Array(4);
+		this.init_perm = new Array(64);
+		this.final_perm = new Array(64);
+		this.inv_key_perm = new Array(64);
+		this.u_key_perm = new Array(56);
+		this.inv_comp_perm = new Array(56);
+		this.ip_maskl = new Array(8);
+		this.ip_maskr = new Array(8);
+		this.fp_maskl = new Array(8);
+		this.fp_maskr = new Array(8);
+		this.un_pbox = new Array(32);
+		this.psbox = new Array(4);
+		this.key_perm_maskl = new Array(8);
+		this.key_perm_maskr = new Array(8);
+		this.comp_maskl = new Array(8);
+		this.comp_maskr = new Array(8);
+		this.en_keysl = new Array(16);
+		this.en_keysr = new Array(16);
+		this.saltbits = null;
+		this.des_r0 = null;
+		this.des_r1 = null;
 	/*
 	 * Invert the S-boxes, reordering the input bits.
 	 */
@@ -357,7 +357,7 @@ jsdes.ascii_to_bin = function(ch) {
 	if (ch > ni) return 0;
 	if (ch >= dt) return (ch - dt);
 	return 0;
-}
+};
 
 
 
@@ -393,7 +393,7 @@ jsdes.des_setkey = function(key) {
 
 		this.en_keysr[round] = this.comp_maskr[0][(t0 >>> 21) & 0x7f] | this.comp_maskr[1][(t0 >>> 14) & 0x7f] | this.comp_maskr[2][(t0 >>> 7) & 0x7f] | this.comp_maskr[3][t0 & 0x7f] | this.comp_maskr[4][(t1 >>> 21) & 0x7f] | this.comp_maskr[5][(t1 >>> 14) & 0x7f] | this.comp_maskr[6][(t1 >>> 7) & 0x7f] | this.comp_maskr[7][t1 & 0x7f];
 	}
-}
+};
 
 
 jsdes.des_setup_salt = function(salt) {
@@ -406,7 +406,7 @@ jsdes.des_setup_salt = function(salt) {
 		saltbit <<= 1;
 		obit >>= 1;
 	}
-}
+};
 
 
 
@@ -453,7 +453,7 @@ jsdes.des_do_des = function() {
 	/* Final permutation (inverse of IP). */
 	this.des_r0 = this.fp_maskl[0][l >>> 24] | this.fp_maskl[1][(l >>> 16) & 0xff] | this.fp_maskl[2][(l >>> 8) & 0xff] | this.fp_maskl[3][l & 0xff] | this.fp_maskl[4][r >>> 24] | this.fp_maskl[5][(r >>> 16) & 0xff] | this.fp_maskl[6][(r >>> 8) & 0xff] | this.fp_maskl[7][r & 0xff];
 	this.des_r1 = this.fp_maskr[0][l >>> 24] | this.fp_maskr[1][(l >>> 16) & 0xff] | this.fp_maskr[2][(l >>> 8) & 0xff] | this.fp_maskr[3][l & 0xff] | this.fp_maskr[4][r >>> 24] | this.fp_maskr[5][(r >>> 16) & 0xff] | this.fp_maskr[6][(r >>> 8) & 0xff] | this.fp_maskr[7][r & 0xff];
-}
+};
 
 jsdes.descrypt = function(key, salt_str) {
 	var keybuf = new Array(8);
@@ -476,23 +476,23 @@ jsdes.descrypt = function(key, salt_str) {
 	this.des_do_des();
 
 	l = (this.des_r0 >>> 8);
-	output += ascii64.charAt((l >>> 18) & 0x3f);
-	output += ascii64.charAt((l >>> 12) & 0x3f);
-	output += ascii64.charAt((l >>> 6) & 0x3f);
-	output += ascii64.charAt((l >>> 0) & 0x3f);
+	output += this.ascii64.charAt((l >>> 18) & 0x3f);
+	output += this.ascii64.charAt((l >>> 12) & 0x3f);
+	output += this.ascii64.charAt((l >>> 6) & 0x3f);
+	output += this.ascii64.charAt((l >>> 0) & 0x3f);
 
 	l = (this.des_r0 << 16) | ((this.des_r1 >>> 16) & 0xffff);
-	output += ascii64.charAt((l >>> 18) & 0x3f);
-	output += ascii64.charAt((l >>> 12) & 0x3f);
-	output += ascii64.charAt((l >>> 6) & 0x3f);
-	output += ascii64.charAt((l >>> 0) & 0x3f);
+	output += this.ascii64.charAt((l >>> 18) & 0x3f);
+	output += this.ascii64.charAt((l >>> 12) & 0x3f);
+	output += this.ascii64.charAt((l >>> 6) & 0x3f);
+	output += this.ascii64.charAt((l >>> 0) & 0x3f);
 
 	l = (this.des_r1 << 2);
-	output += ascii64.charAt((l >>> 12) & 0x3f);
-	output += ascii64.charAt((l >>> 6) & 0x3f);
-	output += ascii64.charAt((l >>> 0) & 0x3f);
+	output += this.ascii64.charAt((l >>> 12) & 0x3f);
+	output += this.ascii64.charAt((l >>> 6) & 0x3f);
+	output += this.ascii64.charAt((l >>> 0) & 0x3f);
 
 	return output;
-}
+};
 
 module.exports.jsdes = jsdes;
