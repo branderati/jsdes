@@ -65,7 +65,9 @@ const ascii64 =
  * The JavaScript adaptation is copyright (c) 2004 Emil Mikulic.
  */
 
-function ascii_to_bin(ch)
+
+jsdes = {};
+jsdes.ascii_to_bin = function (ch)
 {
  var lz = "z".charCodeAt(0),
      la = "a".charCodeAt(0),
@@ -204,7 +206,7 @@ var     u_sbox = new Array(8),
         comp_maskl = new Array(8),
         comp_maskr = new Array(8);
 
-function des_init()
+jsdes.des_init = function ()
 {
         /*
          * Invert the S-boxes, reordering the input bits.
@@ -351,7 +353,7 @@ function des_init()
 var en_keysl = new Array(16),
     en_keysr = new Array(16);
 
-function des_setkey(key)
+jsdes.des_setkey =function (key)
 {
  var rawkey0, rawkey1, k0, k1;
 
@@ -414,7 +416,7 @@ function des_setkey(key)
 }
 
 var saltbits;
-function des_setup_salt(salt)
+jsdes.des_setup_salt = function (salt)
 {
         saltbits = 0;
         saltbit = 1;
@@ -429,7 +431,7 @@ function des_setup_salt(salt)
 
 var des_r0, des_r1;
 
-function des_do_des()
+jsdes.des_do_des = function ()
 {
  var l, r, f, r48l, r48r;
  var count = 25;
@@ -500,7 +502,7 @@ function des_do_des()
         | fp_maskr[7][r & 0xff];
 }
 
-function descrypt(key, salt_str)
+jsdes.descrypt = function (key, salt_str)
 {
         var keybuf = new Array(8);
         var output = salt_str.slice(0,2);
@@ -540,3 +542,5 @@ function descrypt(key, salt_str)
 
         return output;
 }
+
+module.exports.jsdes = jsdes;
