@@ -495,4 +495,4 @@ var jsdes = function() {
 	};
 };
 
-module.exports.jsdes = jsdes;
+module.exports = jsdes;
