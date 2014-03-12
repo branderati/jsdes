@@ -494,6 +494,6 @@ jsdes = function() {
 
 		return output;
 	};
-
-	module.exports.jsdes = jsdes;
 };
+
+module.exports.jsdes = jsdes;
