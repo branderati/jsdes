@@ -67,7 +67,7 @@
 
 jsdes = function() {
 	this.ascii64 =
-	"./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+		"./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 	this.des_IP = [
 		58, 50, 42, 34, 26, 18, 10, 2, 60, 52, 44, 36, 28, 20, 12, 4,
 		62, 54, 46, 38, 30, 22, 14, 6, 64, 56, 48, 40, 32, 24, 16, 8,
@@ -179,28 +179,28 @@ jsdes = function() {
 
 	this.des_bits8 = [0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01];
 
-    this.u_sbox = new Array(8);
-		this.m_sbox = new Array(4);
-		this.init_perm = new Array(64);
-		this.final_perm = new Array(64);
-		this.inv_key_perm = new Array(64);
-		this.u_key_perm = new Array(56);
-		this.inv_comp_perm = new Array(56);
-		this.ip_maskl = new Array(8);
-		this.ip_maskr = new Array(8);
-		this.fp_maskl = new Array(8);
-		this.fp_maskr = new Array(8);
-		this.un_pbox = new Array(32);
-		this.psbox = new Array(4);
-		this.key_perm_maskl = new Array(8);
-		this.key_perm_maskr = new Array(8);
-		this.comp_maskl = new Array(8);
-		this.comp_maskr = new Array(8);
-		this.en_keysl = new Array(16);
-		this.en_keysr = new Array(16);
-		this.saltbits = null;
-		this.des_r0 = null;
-		this.des_r1 = null;
+	this.u_sbox = new Array(8);
+	this.m_sbox = new Array(4);
+	this.init_perm = new Array(64);
+	this.final_perm = new Array(64);
+	this.inv_key_perm = new Array(64);
+	this.u_key_perm = new Array(56);
+	this.inv_comp_perm = new Array(56);
+	this.ip_maskl = new Array(8);
+	this.ip_maskr = new Array(8);
+	this.fp_maskl = new Array(8);
+	this.fp_maskr = new Array(8);
+	this.un_pbox = new Array(32);
+	this.psbox = new Array(4);
+	this.key_perm_maskl = new Array(8);
+	this.key_perm_maskr = new Array(8);
+	this.comp_maskl = new Array(8);
+	this.comp_maskr = new Array(8);
+	this.en_keysl = new Array(16);
+	this.en_keysr = new Array(16);
+	this.saltbits = null;
+	this.des_r0 = null;
+	this.des_r1 = null;
 	/*
 	 * Invert the S-boxes, reordering the input bits.
 	 */
@@ -341,158 +341,159 @@ jsdes = function() {
 			}
 		}
 	}
-};
-jsdes.ascii_to_bin = function(ch) {
-	var lz = "z".charCodeAt(0),
-		la = "a".charCodeAt(0),
-		uz = "Z".charCodeAt(0),
-		ua = "A".charCodeAt(0),
-		ni = "9".charCodeAt(0),
-		dt = ".".charCodeAt(0);
 
-	if (ch > lz) return 0;
-	if (ch >= la) return (ch - la + 38);
-	if (ch > uz) return 0;
-	if (ch >= ua) return (ch - ua + 12);
-	if (ch > ni) return 0;
-	if (ch >= dt) return (ch - dt);
-	return 0;
-};
+	this.ascii_to_bin = function(ch) {
+		var lz = "z".charCodeAt(0),
+			la = "a".charCodeAt(0),
+			uz = "Z".charCodeAt(0),
+			ua = "A".charCodeAt(0),
+			ni = "9".charCodeAt(0),
+			dt = ".".charCodeAt(0);
 
-
-
-jsdes.des_setkey = function(key) {
-	var rawkey0, rawkey1, k0, k1;
-
-	rawkey0 = (key[0] << 24) |
-		(key[1] << 16) |
-		(key[2] << 8) |
-		(key[3] << 0);
-
-	rawkey1 = (key[4] << 24) |
-		(key[5] << 16) |
-		(key[6] << 8) |
-		(key[7] << 0);
-
-	/* Do key permutation and split into two 28-bit subkeys. */
-	k0 = this.key_perm_maskl[0][rawkey0 >>> 25] | this.key_perm_maskl[1][(rawkey0 >>> 17) & 0x7f] | this.key_perm_maskl[2][(rawkey0 >>> 9) & 0x7f] | this.key_perm_maskl[3][(rawkey0 >>> 1) & 0x7f] | this.key_perm_maskl[4][rawkey1 >>> 25] | this.key_perm_maskl[5][(rawkey1 >>> 17) & 0x7f] | this.key_perm_maskl[6][(rawkey1 >>> 9) & 0x7f] | this.key_perm_maskl[7][(rawkey1 >>> 1) & 0x7f];
-	k1 = this.key_perm_maskr[0][rawkey0 >>> 25] | this.key_perm_maskr[1][(rawkey0 >>> 17) & 0x7f] | this.key_perm_maskr[2][(rawkey0 >>> 9) & 0x7f] | this.key_perm_maskr[3][(rawkey0 >>> 1) & 0x7f] | this.key_perm_maskr[4][rawkey1 >>> 25] | this.key_perm_maskr[5][(rawkey1 >>> 17) & 0x7f] | this.key_perm_maskr[6][(rawkey1 >>> 9) & 0x7f] | this.key_perm_maskr[7][(rawkey1 >>> 1) & 0x7f];
-
-	/* Rotate subkeys and do compression permutation. */
-	var shifts = 0,
-		round;
-	for (round = 0; round < 16; round++) {
-		var t0, t1;
-
-		shifts += this.des_key_shifts[round];
-
-		t0 = (k0 << shifts) | (k0 >>> (28 - shifts));
-		t1 = (k1 << shifts) | (k1 >>> (28 - shifts));
-
-		this.en_keysl[round] = this.comp_maskl[0][(t0 >>> 21) & 0x7f] | this.comp_maskl[1][(t0 >>> 14) & 0x7f] | this.comp_maskl[2][(t0 >>> 7) & 0x7f] | this.comp_maskl[3][t0 & 0x7f] | this.comp_maskl[4][(t1 >>> 21) & 0x7f] | this.comp_maskl[5][(t1 >>> 14) & 0x7f] | this.comp_maskl[6][(t1 >>> 7) & 0x7f] | this.comp_maskl[7][t1 & 0x7f];
-
-		this.en_keysr[round] = this.comp_maskr[0][(t0 >>> 21) & 0x7f] | this.comp_maskr[1][(t0 >>> 14) & 0x7f] | this.comp_maskr[2][(t0 >>> 7) & 0x7f] | this.comp_maskr[3][t0 & 0x7f] | this.comp_maskr[4][(t1 >>> 21) & 0x7f] | this.comp_maskr[5][(t1 >>> 14) & 0x7f] | this.comp_maskr[6][(t1 >>> 7) & 0x7f] | this.comp_maskr[7][t1 & 0x7f];
-	}
-};
-
-
-jsdes.des_setup_salt = function(salt) {
-	this.saltbits = 0;
-	saltbit = 1;
-	obit = 0x800000;
-	for (i = 0; i < 24; i++) {
-		if (salt & saltbit)
-			this.saltbits |= obit;
-		saltbit <<= 1;
-		obit >>= 1;
-	}
-};
+		if (ch > lz) return 0;
+		if (ch >= la) return (ch - la + 38);
+		if (ch > uz) return 0;
+		if (ch >= ua) return (ch - ua + 12);
+		if (ch > ni) return 0;
+		if (ch >= dt) return (ch - dt);
+		return 0;
+	};
 
 
 
-jsdes.des_do_des = function() {
-	var l, r, f, r48l, r48r;
-	var count = 25;
+	this.des_setkey = function(key) {
+		var rawkey0, rawkey1, k0, k1;
 
-	/* Don't bother with initial permutation. */
-	l = r = 0;
+		rawkey0 = (key[0] << 24) |
+			(key[1] << 16) |
+			(key[2] << 8) |
+			(key[3] << 0);
 
-	while (count--) {
-		/* Do each round. */
-		kl = 0;
-		kr = 0;
-		var round = 16;
-		while (round--) {
-			/* Expand R to 48 bits (simulate the E-box). */
-			r48l = ((r & 0x00000001) << 23) | ((r & 0xf8000000) >>> 9) | ((r & 0x1f800000) >>> 11) | ((r & 0x01f80000) >>> 13) | ((r & 0x001f8000) >>> 15);
+		rawkey1 = (key[4] << 24) |
+			(key[5] << 16) |
+			(key[6] << 8) |
+			(key[7] << 0);
 
-			r48r = ((r & 0x0001f800) << 7) | ((r & 0x00001f80) << 5) | ((r & 0x000001f8) << 3) | ((r & 0x0000001f) << 1) | ((r & 0x80000000) >>> 31);
-			/*
-			 * Do salting for crypt() and friends, and
-			 * XOR with the permuted key.
-			 */
-			f = (r48l ^ r48r) & this.saltbits;
-			r48l ^= f ^ this.en_keysl[kl++];
-			r48r ^= f ^ this.en_keysr[kr++];
-			/*
-			 * Do sbox lookups (which shrink it back to 32 bits)
-			 * and do the pbox permutation at the same time.
-			 */
-			f = this.psbox[0][this.m_sbox[0][r48l >> 12]] | this.psbox[1][this.m_sbox[1][r48l & 0xfff]] | this.psbox[2][this.m_sbox[2][r48r >> 12]] | this.psbox[3][this.m_sbox[3][r48r & 0xfff]];
-			/*
-			 * Now that we've permuted things, complete f().
-			 */
-			f ^= l;
-			l = r;
-			r = f;
+		/* Do key permutation and split into two 28-bit subkeys. */
+		k0 = this.key_perm_maskl[0][rawkey0 >>> 25] | this.key_perm_maskl[1][(rawkey0 >>> 17) & 0x7f] | this.key_perm_maskl[2][(rawkey0 >>> 9) & 0x7f] | this.key_perm_maskl[3][(rawkey0 >>> 1) & 0x7f] | this.key_perm_maskl[4][rawkey1 >>> 25] | this.key_perm_maskl[5][(rawkey1 >>> 17) & 0x7f] | this.key_perm_maskl[6][(rawkey1 >>> 9) & 0x7f] | this.key_perm_maskl[7][(rawkey1 >>> 1) & 0x7f];
+		k1 = this.key_perm_maskr[0][rawkey0 >>> 25] | this.key_perm_maskr[1][(rawkey0 >>> 17) & 0x7f] | this.key_perm_maskr[2][(rawkey0 >>> 9) & 0x7f] | this.key_perm_maskr[3][(rawkey0 >>> 1) & 0x7f] | this.key_perm_maskr[4][rawkey1 >>> 25] | this.key_perm_maskr[5][(rawkey1 >>> 17) & 0x7f] | this.key_perm_maskr[6][(rawkey1 >>> 9) & 0x7f] | this.key_perm_maskr[7][(rawkey1 >>> 1) & 0x7f];
+
+		/* Rotate subkeys and do compression permutation. */
+		var shifts = 0,
+			round;
+		for (round = 0; round < 16; round++) {
+			var t0, t1;
+
+			shifts += this.des_key_shifts[round];
+
+			t0 = (k0 << shifts) | (k0 >>> (28 - shifts));
+			t1 = (k1 << shifts) | (k1 >>> (28 - shifts));
+
+			this.en_keysl[round] = this.comp_maskl[0][(t0 >>> 21) & 0x7f] | this.comp_maskl[1][(t0 >>> 14) & 0x7f] | this.comp_maskl[2][(t0 >>> 7) & 0x7f] | this.comp_maskl[3][t0 & 0x7f] | this.comp_maskl[4][(t1 >>> 21) & 0x7f] | this.comp_maskl[5][(t1 >>> 14) & 0x7f] | this.comp_maskl[6][(t1 >>> 7) & 0x7f] | this.comp_maskl[7][t1 & 0x7f];
+
+			this.en_keysr[round] = this.comp_maskr[0][(t0 >>> 21) & 0x7f] | this.comp_maskr[1][(t0 >>> 14) & 0x7f] | this.comp_maskr[2][(t0 >>> 7) & 0x7f] | this.comp_maskr[3][t0 & 0x7f] | this.comp_maskr[4][(t1 >>> 21) & 0x7f] | this.comp_maskr[5][(t1 >>> 14) & 0x7f] | this.comp_maskr[6][(t1 >>> 7) & 0x7f] | this.comp_maskr[7][t1 & 0x7f];
 		}
-		r = l;
-		l = f;
-	}
+	};
 
-	/* Final permutation (inverse of IP). */
-	this.des_r0 = this.fp_maskl[0][l >>> 24] | this.fp_maskl[1][(l >>> 16) & 0xff] | this.fp_maskl[2][(l >>> 8) & 0xff] | this.fp_maskl[3][l & 0xff] | this.fp_maskl[4][r >>> 24] | this.fp_maskl[5][(r >>> 16) & 0xff] | this.fp_maskl[6][(r >>> 8) & 0xff] | this.fp_maskl[7][r & 0xff];
-	this.des_r1 = this.fp_maskr[0][l >>> 24] | this.fp_maskr[1][(l >>> 16) & 0xff] | this.fp_maskr[2][(l >>> 8) & 0xff] | this.fp_maskr[3][l & 0xff] | this.fp_maskr[4][r >>> 24] | this.fp_maskr[5][(r >>> 16) & 0xff] | this.fp_maskr[6][(r >>> 8) & 0xff] | this.fp_maskr[7][r & 0xff];
+
+	this.des_setup_salt = function(salt) {
+		this.saltbits = 0;
+		saltbit = 1;
+		obit = 0x800000;
+		for (i = 0; i < 24; i++) {
+			if (salt & saltbit)
+				this.saltbits |= obit;
+			saltbit <<= 1;
+			obit >>= 1;
+		}
+	};
+
+
+
+	this.des_do_des = function() {
+		var l, r, f, r48l, r48r;
+		var count = 25;
+
+		/* Don't bother with initial permutation. */
+		l = r = 0;
+
+		while (count--) {
+			/* Do each round. */
+			kl = 0;
+			kr = 0;
+			var round = 16;
+			while (round--) {
+				/* Expand R to 48 bits (simulate the E-box). */
+				r48l = ((r & 0x00000001) << 23) | ((r & 0xf8000000) >>> 9) | ((r & 0x1f800000) >>> 11) | ((r & 0x01f80000) >>> 13) | ((r & 0x001f8000) >>> 15);
+
+				r48r = ((r & 0x0001f800) << 7) | ((r & 0x00001f80) << 5) | ((r & 0x000001f8) << 3) | ((r & 0x0000001f) << 1) | ((r & 0x80000000) >>> 31);
+				/*
+				 * Do salting for crypt() and friends, and
+				 * XOR with the permuted key.
+				 */
+				f = (r48l ^ r48r) & this.saltbits;
+				r48l ^= f ^ this.en_keysl[kl++];
+				r48r ^= f ^ this.en_keysr[kr++];
+				/*
+				 * Do sbox lookups (which shrink it back to 32 bits)
+				 * and do the pbox permutation at the same time.
+				 */
+				f = this.psbox[0][this.m_sbox[0][r48l >> 12]] | this.psbox[1][this.m_sbox[1][r48l & 0xfff]] | this.psbox[2][this.m_sbox[2][r48r >> 12]] | this.psbox[3][this.m_sbox[3][r48r & 0xfff]];
+				/*
+				 * Now that we've permuted things, complete f().
+				 */
+				f ^= l;
+				l = r;
+				r = f;
+			}
+			r = l;
+			l = f;
+		}
+
+		/* Final permutation (inverse of IP). */
+		this.des_r0 = this.fp_maskl[0][l >>> 24] | this.fp_maskl[1][(l >>> 16) & 0xff] | this.fp_maskl[2][(l >>> 8) & 0xff] | this.fp_maskl[3][l & 0xff] | this.fp_maskl[4][r >>> 24] | this.fp_maskl[5][(r >>> 16) & 0xff] | this.fp_maskl[6][(r >>> 8) & 0xff] | this.fp_maskl[7][r & 0xff];
+		this.des_r1 = this.fp_maskr[0][l >>> 24] | this.fp_maskr[1][(l >>> 16) & 0xff] | this.fp_maskr[2][(l >>> 8) & 0xff] | this.fp_maskr[3][l & 0xff] | this.fp_maskr[4][r >>> 24] | this.fp_maskr[5][(r >>> 16) & 0xff] | this.fp_maskr[6][(r >>> 8) & 0xff] | this.fp_maskr[7][r & 0xff];
+	};
+
+	this.descrypt = function(key, salt_str) {
+		var keybuf = new Array(8);
+		var output = salt_str.slice(0, 2);
+
+		q = 0;
+		keypos = 0;
+		while (q < 8) {
+			keybuf[q] = key.charCodeAt(keypos) << 1;
+			q++;
+			if (keypos < key.length) keypos++;
+		}
+
+		this.des_setkey(keybuf);
+
+		/* This is the "old style" DES crypt. */
+		var salt = (this.ascii_to_bin(salt_str.charCodeAt(1)) << 6) |
+			this.ascii_to_bin(salt_str.charCodeAt(0));
+		this.des_setup_salt(salt);
+		this.des_do_des();
+
+		l = (this.des_r0 >>> 8);
+		output += this.ascii64.charAt((l >>> 18) & 0x3f);
+		output += this.ascii64.charAt((l >>> 12) & 0x3f);
+		output += this.ascii64.charAt((l >>> 6) & 0x3f);
+		output += this.ascii64.charAt((l >>> 0) & 0x3f);
+
+		l = (this.des_r0 << 16) | ((this.des_r1 >>> 16) & 0xffff);
+		output += this.ascii64.charAt((l >>> 18) & 0x3f);
+		output += this.ascii64.charAt((l >>> 12) & 0x3f);
+		output += this.ascii64.charAt((l >>> 6) & 0x3f);
+		output += this.ascii64.charAt((l >>> 0) & 0x3f);
+
+		l = (this.des_r1 << 2);
+		output += this.ascii64.charAt((l >>> 12) & 0x3f);
+		output += this.ascii64.charAt((l >>> 6) & 0x3f);
+		output += this.ascii64.charAt((l >>> 0) & 0x3f);
+
+		return output;
+	};
+
+	module.exports.jsdes = jsdes;
 };
-
-jsdes.descrypt = function(key, salt_str) {
-	var keybuf = new Array(8);
-	var output = salt_str.slice(0, 2);
-
-	q = 0;
-	keypos = 0;
-	while (q < 8) {
-		keybuf[q] = key.charCodeAt(keypos) << 1;
-		q++;
-		if (keypos < key.length) keypos++;
-	}
-
-	this.des_setkey(keybuf);
-
-	/* This is the "old style" DES crypt. */
-	var salt = (this.ascii_to_bin(salt_str.charCodeAt(1)) << 6) |
-		this.ascii_to_bin(salt_str.charCodeAt(0));
-	this.des_setup_salt(salt);
-	this.des_do_des();
-
-	l = (this.des_r0 >>> 8);
-	output += this.ascii64.charAt((l >>> 18) & 0x3f);
-	output += this.ascii64.charAt((l >>> 12) & 0x3f);
-	output += this.ascii64.charAt((l >>> 6) & 0x3f);
-	output += this.ascii64.charAt((l >>> 0) & 0x3f);
-
-	l = (this.des_r0 << 16) | ((this.des_r1 >>> 16) & 0xffff);
-	output += this.ascii64.charAt((l >>> 18) & 0x3f);
-	output += this.ascii64.charAt((l >>> 12) & 0x3f);
-	output += this.ascii64.charAt((l >>> 6) & 0x3f);
-	output += this.ascii64.charAt((l >>> 0) & 0x3f);
-
-	l = (this.des_r1 << 2);
-	output += this.ascii64.charAt((l >>> 12) & 0x3f);
-	output += this.ascii64.charAt((l >>> 6) & 0x3f);
-	output += this.ascii64.charAt((l >>> 0) & 0x3f);
-
-	return output;
-};
-
-module.exports.jsdes = jsdes;
